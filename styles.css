@@ -1,0 +1,58 @@
+/* General Styles */
+
+
+body {
+    color: #fdfcfa;
+    font-size: 30px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #453e3e;
+}
+
+h1 {
+
+    margin-bottom: 20px;
+    font-size: 50px;
+}
+.chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
+    width: 480px;
+    height: 480px;
+    border: 2px solid rgb(51, 49, 49);
+}
+
+.square {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.white {
+    background-color: #fdfcfa;
+}
+
+.black {
+    background-color: #769656;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
