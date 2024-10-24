@@ -139,9 +139,102 @@ function isValidMove(startRow, startCol, endRow, endCol) {
         return false;
     }
 
-    // Simple check for now (you can add piece-specific move validation)
+    // Determine the movement based on the piece type
+    switch (piece.toLowerCase()) {
+        case 'p': // Pawn
+            return isValidPawnMove(startRow, startCol, endRow, endCol, piece);
+        case 'r': // Rook
+            return isValidRookMove(startRow, startCol, endRow, endCol);
+        case 'n': // Knight
+            return isValidKnightMove(startRow, startCol, endRow, endCol);
+        case 'b': // Bishop
+            return isValidBishopMove(startRow, startCol, endRow, endCol);
+        case 'q': // Queen
+            return isValidQueenMove(startRow, startCol, endRow, endCol);
+        case 'k': // King
+            return isValidKingMove(startRow, startCol, endRow, endCol);
+        default:
+            return false; // Invalid piece type
+    }
+}
+
+function isValidPawnMove(startRow, startCol, endRow, endCol, piece) {
+    const direction = piece === 'P' ? -1 : 1; // White moves up (-1), black moves down (1)
+
+    // Normal move forward
+    if (startCol === endCol && board[endRow][endCol] === '') {
+        // Move by 1 square forward
+        if (endRow === startRow + direction) {
+            return true;
+        }
+        // Move by 2 squares forward (only from the starting position)
+        if ((piece === 'P' && startRow === 6) || (piece === 'p' && startRow === 1)) {
+            if (endRow === startRow + 2 * direction && board[startRow + direction][startCol] === '') {
+                return true;
+            }
+        }
+    }
+
+    // Capturing diagonally
+    if (Math.abs(startCol - endCol) === 1 && endRow === startRow + direction && board[endRow][endCol] !== '') {
+        return true;
+    }
+
+    return false;
+}
+
+function isValidRookMove(startRow, startCol, endRow, endCol) {
+    // Rooks move horizontally or vertically
+    if (startRow === endRow || startCol === endCol) {
+        return isPathClear(startRow, startCol, endRow, endCol);
+    }
+    return false;
+}
+
+function isValidKnightMove(startRow, startCol, endRow, endCol) {
+    const rowDiff = Math.abs(endRow - startRow);
+    const colDiff = Math.abs(endCol - startCol);
+    
+    // Knights move in an "L" shape: 2 squares in one direction and 1 square in the other
+    return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2);
+}
+
+function isValidBishopMove(startRow, startCol, endRow, endCol) {
+    // Bishops move diagonally
+    if (Math.abs(startRow - endRow) === Math.abs(startCol - endCol)) {
+        return isPathClear(startRow, startCol, endRow, endCol);
+    }
+    return false;
+}
+
+function isValidQueenMove(startRow, startCol, endRow, endCol) {
+    // Queens move like both rooks and bishops
+    return isValidRookMove(startRow, startCol, endRow, endCol) || isValidBishopMove(startRow, startCol, endRow, endCol);
+}
+function isValidKingMove(startRow, startCol, endRow, endCol) {
+    // Kings move 1 square in any direction
+    const rowDiff = Math.abs(endRow - startRow);
+    const colDiff = Math.abs(endCol - startCol);
+    return rowDiff <= 1 && colDiff <= 1;
+}
+function isPathClear(startRow, startCol, endRow, endCol) {
+    const rowDirection = endRow > startRow ? 1 : (endRow < startRow ? -1 : 0);
+    const colDirection = endCol > startCol ? 1 : (endCol < startCol ? -1 : 0);
+
+    let row = startRow + rowDirection;
+    let col = startCol + colDirection;
+
+    while (row !== endRow || col !== endCol) {
+        if (board[row][col] !== '') {
+            return false; // There's a piece in the way
+        }
+        row += rowDirection;
+        col += colDirection;
+    }
+
     return true;
 }
+
 
 // Highlight the selected square
 function highlightSelectedSquare(row, col) {
